@@ -1,0 +1,152 @@
+<section class="hero is-link">
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title">
+        Convolución Discreta
+      </h1>
+      <h2 class="subtitle">
+        Práctica 2 "Teoría de Comunicaciones y señales"
+      </h2>
+    </div>
+  </div>
+</section>
+<section class="container">
+  <div class="column">
+    <h1 class="subtitle is-text has-text-centered">¡Bienvenido! Este software te permitirá realizar convoluciones discretas de 3 tipos: Finitas, Circulares y Periódicas.</h1>
+  </div>
+  <br>
+  <div class="columns">
+    <div class="column">
+      <div class="card">
+        <div class="card-content">
+          <h3 class="title is-text has-text-centered">Señal 1</h3>
+          <div class="columns">
+            <div class="column">
+              <p class="is-text has-text-centered">Ingresa la Señal 1:</p>
+              <input class="input is-rounded"
+                     type="text"
+                     placeholder="Ejemplo: 1,2,3..."
+                     [(ngModel)]="signalOne"  >
+            </div>
+            <div class="column">
+              <p class="is-text has-text-centered">Ingresa el cero de la Señal 1:</p>
+              <input class="input is-rounded"
+                     type="text"
+                     placeholder="Ejemplo: 0"
+                     [(ngModel)]="centerFirst">
+            </div>
+          </div>
+          <div class="column">
+              <div class="has-text-centered is-fullwidth">
+                <label class="checkbox">
+                  <input type="checkbox" [(ngModel)]="isPeriodicaFirst">
+                  ¿Es periódica?
+                </label>
+              </div>
+          </div>
+          <div class="card-footer">
+              <button class="button is-link is-fullwidth" (click)="graficar(signalOne,centerFirst,isPeriodicaFirst, 1)"   >
+                <span class="icon is-small">
+                  <i class="material-icons">insert_chart</i>
+                </span>
+                <span>Graficar</span>
+              </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="column">
+      <canvas id="myChart1" height="130"></canvas>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column">
+      <div class="card">
+        <div class="card-content">
+          <h3 class="title is-text has-text-centered">Señal 2</h3>
+          <div class="columns">
+            <div class="column">
+              <p class="is-text has-text-centered">Ingresa la Señal 2:</p>
+              <input class="input is-rounded"
+                     type="text"
+                     placeholder="Ejemplo: 1,2,3..."
+                     [(ngModel)]="signalTwo">
+            </div>
+            <div class="column">
+              <p class="is-text has-text-centered">Ingresa el cero de la Señal 2:</p>
+              <input class="input is-rounded"
+                     type="text"
+                     placeholder="Ejemplo: 0"
+                     [(ngModel)]="centerSecond">
+            </div>
+          </div>
+          <div class="column">
+            <div class="has-text-centered is-fullwidth">
+              <label class="checkbox">
+                <input type="checkbox" [(ngModel)]="isPeriodicaSecond">
+                ¿Es periódica?
+              </label>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="button is-link is-fullwidth" (click)="graficar(signalTwo,centerSecond,isPeriodicaSecond, 2)">
+              <span class="icon is-small">
+                <i class="material-icons">insert_chart</i>
+              </span>
+              <span>Graficar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="column">
+      <canvas id="myChart2" height="130"></canvas>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column">
+      <div class="button is-fullwidth">
+        <button class="button is-link is-fullwidth is-rounded" [disabled]="isPeriodicaFirst || isPeriodicaSecond" (click)="convolucionFinita(resultadoPrimerGrafica,resultadoSegundaGrafica,centerFirst,centerSecond)">
+              <span class="icon is-small">
+                <i class="material-icons">settings_ethernet</i>
+              </span>
+          <span>Finita</span>
+        </button>
+      </div>
+    </div>
+    <div class="column">
+      <div class="button is-fullwidth">
+        <button class="button is-link is-fullwidth is-rounded" [disabled]="!isPeriodicaFirst || !isPeriodicaSecond" (click)="convolucionCircular(resultadoPrimerGrafica,resultadoSegundaGrafica,centerFirst,centerSecond)">
+              <span class="icon is-small">
+                <i class="material-icons">panorama_fish_eye</i>
+              </span>
+          <span>Circular</span>
+        </button>
+      </div>
+    </div>
+    <div class="column">
+      <div class="button is-fullwidth">
+        <button class="button is-link is-fullwidth is-rounded" [disabled]="!isPeriodicaFirst && !isPeriodicaSecond" (click)="convolucionPeriodica(resultadoPrimerGrafica,resultadoSegundaGrafica,centerFirst,centerSecond)">
+              <span class="icon is-small">
+                <i class="material-icons">autorenew</i>
+              </span>
+          <span>Periódica</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column" *ngIf="isPeriodicaFirst || isPeriodicaSecond">
+      <h3 class="subtitle is-text has-text-centered">Resultado: {{resultado}} ...</h3>
+    </div>
+    <div class="column" *ngIf="!isPeriodicaFirst && !isPeriodicaSecond">
+      <h3 class="subtitle is-text has-text-centered">Resultado: {{resultado}}</h3>
+    </div>
+    <div class="column">
+      <h3 class="subtitle is-text has-text-centered">Centro del resultado: {{centroResultado}}</h3>
+    </div>
+  </div>
+  <div class="column">
+    <canvas id="myChart3" height="130"></canvas>
+  </div>
+</section>
