@@ -100,7 +100,7 @@ export class PrincipalComponent implements OnInit {
                 borderColor: colorGrafica,
                 borderWidth: 2,
                 barPercentage: .01
-              }, {
+              }, { //
                 type: 'line',
                 pointRadius: 3,
                 pointHoverRadius: 4,
