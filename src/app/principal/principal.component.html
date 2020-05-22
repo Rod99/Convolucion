@@ -126,7 +126,7 @@
     </div>
     <div class="column">
       <div class="button is-fullwidth">
-        <button class="button is-link is-fullwidth is-rounded" [disabled]="!isPeriodicaFirst && !isPeriodicaSecond" (click)="convolucionPeriodica(resultadoPrimerGrafica,resultadoSegundaGrafica,centerFirst,centerSecond)">
+        <button class="button is-link is-fullwidth is-rounded" [disabled]="!isPeriodicaFirst && !isPeriodicaSecond || (isPeriodicaFirst && isPeriodicaSecond)" (click)="convolucionPeriodica(resultadoPrimerGrafica,resultadoSegundaGrafica,centerFirst,centerSecond)">
               <span class="icon is-small">
                 <i class="material-icons">autorenew</i>
               </span>
@@ -137,7 +137,7 @@
   </div>
   <div class="columns">
     <div class="column" *ngIf="isPeriodicaFirst || isPeriodicaSecond">
-      <h3 class="subtitle is-text has-text-centered">Resultado: {{resultado}} ...</h3>
+      <h3 class="subtitle is-text has-text-centered">Resultado: ... {{resultado}} ...</h3>
     </div>
     <div class="column" *ngIf="!isPeriodicaFirst && !isPeriodicaSecond">
       <h3 class="subtitle is-text has-text-centered">Resultado: {{resultado}}</h3>

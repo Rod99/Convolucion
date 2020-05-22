@@ -74,13 +74,13 @@ export class PrincipalComponent implements OnInit {
         const colorGrafica = [];
         if (isPeriodica) { // En caso de que la señal sea periódica se tomará el doble de labels en el eje de las x
           for (let i = 0; i < 2 * realSignal.length; i ++) {
-            labels[i] = realCenter + i;
+            labels[i] = -1 * realCenter + i;
             colorGrafica[i] = 'rgba(255,0,51,0.2)'; // Agregamos el color rojo, aunque podria ser cualquier color
           }
           realSignal = realSignal.concat(realSignal); // En caso de que sea periodica, simplemente concatenamos el arreglo a sí mismo
         } else {
           for (let i = 0; i < realSignal.length; i ++) {
-            labels[i] = realCenter + i;
+            labels[i] = -1 * realCenter + i;
             colorGrafica[i] = 'rgba(255,0,53,0.2)'; // Agregamos el color rojo, aunque podria ser cualquier color
           }
         }
@@ -257,26 +257,29 @@ export class PrincipalComponent implements OnInit {
    * Por ejemplo, si el periodo de x_n es 2, la secuencia unicamente debe tener 2 muestras.
    *
    * Retorna el arreglo de la secuencia resultante.
-   * @param {Array} primerSecuencia
-   * @param {Array} segundaSecuencia
+   * @param x_n
+   * @param h_n
    * @param primerCentro
    * @param segundoCentro
    * @returns {Array} yn convolucion x(n)*h(n)
    */
-  public convolucionCircular(primerSecuencia, segundaSecuencia, primerCentro, segundoCentro) {
-    if (this.yaGraficoPrimera && this.yaGraficoSegunda) {
-      const maxSize = primerSecuencia.length > segundaSecuencia.length ? primerSecuencia.length : segundaSecuencia.length;
-      const resultante = [];
-      const colVec = [];
-      const rowVec = [];
+  // tslint:disable-next-line:variable-name
+  public convolucionCircular(x_n, h_n, primerCentro, segundoCentro) {
+    if (this.yaGraficoPrimera && this.yaGraficoSegunda){
+
+      console.log(x_n);
+      console.log(h_n);
+      const maxSize = x_n.length > h_n.length ? x_n.length / 2 : h_n.length / 2;
+      // tslint:disable-next-line:one-variable-per-declaration
+      let y_n = [], col_vec = [], row_vec = [];
       const circularMatrix = [];
       const centro = Math.abs((-1 * primerCentro) + (-1 * segundoCentro));
 
       // Inicializacion de vectores
       for (let i = 0; i < maxSize; i++) {
-        rowVec[i] = i >= primerSecuencia.length ? 0 : primerSecuencia[i];
-        colVec[i] = i >= segundaSecuencia.length ? 0 : segundaSecuencia[i];
-        resultante[i] = 0;
+        row_vec[i] = i >= x_n.length / 2 ? 0 : x_n[i];
+        col_vec[i] = i >= h_n.length / 2 ? 0 : h_n[i];
+        y_n[i] = 0;
       }
 
       // Inicializacion de la matriz
@@ -288,12 +291,11 @@ export class PrincipalComponent implements OnInit {
       }
 
       // Generar la matriz
-      let k = 0;
-      let d = 0;
+      let k = 0, d = 0;
       for (let i = 0; i < maxSize; i++) {
         let curIndex = k - d;
         for (let j = 0; j < maxSize; j++) {
-          circularMatrix[j][i] = rowVec[curIndex % maxSize];
+          circularMatrix[j][i] = row_vec[curIndex % maxSize];
           curIndex++;
         }
         k = maxSize;
@@ -303,13 +305,13 @@ export class PrincipalComponent implements OnInit {
       // Multiplicar la matriz por el vector
       for (let i = 0; i < maxSize; i++) {
         for (let j = 0; j < maxSize; j++) {
-          resultante[i] += (circularMatrix[i][j] * colVec[j]);
+          y_n[i] += circularMatrix[i][j] * col_vec[j];
         }
       }
-      this.resultado = resultante;
+      this.resultado = y_n;
       this.centroResultado = centro.toString();
-      this.graficar(resultante, centro, this.isPeriodicaFirst || this.isPeriodicaSecond, 0);
-      return {resultante, centro};
+      this.graficar(y_n, centro, this.isPeriodicaFirst || this.isPeriodicaSecond, 0);
+      return {y_n, centro};
     } else {
       Swal.fire({
         title: '¡Ups, hubo un error!',
@@ -333,8 +335,12 @@ export class PrincipalComponent implements OnInit {
    */
   public convolucionPeriodica(primerSecuencia, segundaSecuencia, ceroPrimera, ceroSegunda) {
     if (this.yaGraficoPrimera && this.yaGraficoSegunda) {
+      if (this.isPeriodicaSecond){
+        const aux = primerSecuencia;
+        primerSecuencia = segundaSecuencia;
+        segundaSecuencia = aux;
+      }
       const yn = Array.from(new Array(primerSecuencia.length)).map(e => 0);
-
       // tslint:disable-next-line:prefer-const one-variable-per-declaration max-line-length
       let begin = primerSecuencia.length > segundaSecuencia.length ? segundaSecuencia.length :  segundaSecuencia.length % primerSecuencia.length;
       const centro = Math.abs((-1 * ceroPrimera) + (-1 * ceroSegunda));
