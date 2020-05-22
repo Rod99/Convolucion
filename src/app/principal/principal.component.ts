@@ -342,8 +342,7 @@ export class PrincipalComponent implements OnInit {
       }
       const yn = Array.from(new Array(primerSecuencia.length)).map(e => 0);
       // tslint:disable-next-line:prefer-const one-variable-per-declaration max-line-length
-      let begin = primerSecuencia.length > segundaSecuencia.length ? segundaSecuencia.length :  segundaSecuencia.length % primerSecuencia.length;
-      const centro = Math.abs((-1 * ceroPrimera) + (-1 * ceroSegunda));
+      let begin = primerSecuencia.length > segundaSecuencia.length ? segundaSecuencia.length :  segundaSecuencia.length % primerSecuencia.length, centro;
 
       for (let i = 0; i < segundaSecuencia.length; ++i){
 
@@ -358,6 +357,9 @@ export class PrincipalComponent implements OnInit {
 
         for (let count = 0, j = trueBegin; count < primerSecuencia.length; ++count, ++j){
           yn[count] += (segundaSecuencia[i] * primerSecuencia[j]);
+          if (i === ceroSegunda && j === ceroPrimera){
+            centro = count;
+          }
           if (j >= primerSecuencia.length - 1) {
             j = -1;
           }
